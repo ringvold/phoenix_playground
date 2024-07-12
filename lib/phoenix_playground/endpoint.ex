@@ -21,9 +21,14 @@ defmodule PhoenixPlayground.Endpoint do
   plug Plug.Static, from: {:phoenix, "priv/static"}, at: "/assets/phoenix"
   plug Plug.Static, from: {:phoenix_live_view, "priv/static"}, at: "/assets/phoenix_live_view"
 
-  socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
-  plug Phoenix.LiveReloader
-  plug Phoenix.CodeReloader, reloader: &PhoenixPlayground.CodeReloader.reload/2
+  config = Application.get_env(:phoenix_playground, PhoenixPlayground.Endpoint)
+
+  if config[:live_reload] do
+    socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
+    plug Phoenix.LiveReloader
+    plug Phoenix.CodeReloader, reloader: &PhoenixPlayground.CodeReloader.reload/2
+  end
+
   # TODO:
   # plug Phoenix.Ecto.CheckRepoStatus, otp_app: :phoenix_playground
 
